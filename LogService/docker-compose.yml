@@ -4,9 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: web
+    container_name: RoundRobin
     ports:
-      - "8087:6000"
+      - "51000:6010"
   db:
     image: mongo:3.6.1
     container_name: db

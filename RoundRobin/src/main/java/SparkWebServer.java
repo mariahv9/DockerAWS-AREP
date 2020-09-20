@@ -1,35 +1,65 @@
 import spark.Request;
 import spark.Response;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-
 import static spark.Spark.*;
-//round robin
-//http://localhost:4567/index
-//Corregir Comunicacion
-//Contador
-//Docker-AWS
+
+/**
+ * Class that works as RoundRobin.
+ * @author Maria Fernanda Hernandez Vargas
+ */
 public class SparkWebServer {
+    private static int load = 0;
+
+    /**
+     * Method that connects with logService, works as controller
+     * @param args
+     */
     public static void main(String[] args) {
         port(getPort());
-        get("hello", (req, res) -> "Hello Docker");
-        get ("index", (req, res) -> inputDataPage(req, res));
-        get ("results", (req, res) -> {
+        get("/hello", (req, res) -> "Hello Docker");
+        get ("/index", (req, res) -> inputDataPage(req, res));
+        get ("/results", (req, res) -> {
+            int loadCont;
             String function = req.queryParams("user");
-            System.out.println(req.queryParams("user"));
-            readURL("http://localhost:4567/index?user="+function);
+            loadCont = getLoad();
+            readURL("http://ec2-35-175-129-150.compute-1.amazonaws.com:5100"+loadCont+"/results?user=" + function);
+            loadCont++;
+            if (loadCont > 2) {
+                loadCont = 0;
+                setLoad(loadCont);
+            } else {
+                setLoad(loadCont);
+            }
+            System.out.println(loadCont);
             return inputDataPage(req, res);
         });
-        get ("consult", (req, res) -> {
+        get ("/consult", (req, res) -> {
+            int loadCont;
             res.type("application/json");
-            return readURL("http://localhost:4567/consult");
+            loadCont = getLoad();
+            String url = readURL("http://ec2-35-175-129-150.compute-1.amazonaws.com:5100"+loadCont+"/consult");
+            loadCont++;
+            if (loadCont > 2) {
+                loadCont = 0;
+                setLoad(loadCont);
+            } else {
+                setLoad(loadCont);
+            }
+            System.out.println(loadCont);
+            return url;
         });
     }
 
+    /**
+     * Method that does html function, front of the webSite
+     * @param req
+     * @param res
+     * @return
+     */
     public static String inputDataPage (Request req, Response res) {
         String pageContent
                 = "<!DOCTYPE html>"
@@ -39,7 +69,7 @@ public class SparkWebServer {
                 + "<h4>A continuacion ingrese su nombre</h4>"
                 + "<form action=\"/results\">"
                 + "  Nombre:"
-                + "  <input type=\"text\" name=\"user\" size= 10  value=\"Ana\n\">"
+                + "  <input type=\"text\" name=\"user\" size= 10  placeholder=\"Nombre\n\">"
                 + "  <br><br>"
                 + "  <input type=\"submit\" value=\"Enviar\">"
                 + "  <br><br>"
@@ -52,14 +82,17 @@ public class SparkWebServer {
         return pageContent;
     }
 
+    /**
+     * Method that reads input as URL
+     * @param sitetoread
+     * @return
+     */
     public static String readURL(String sitetoread) {
         String resData = null;
         try {
             URL siteURL = new URL(sitetoread);
             URLConnection urlConnection = siteURL.openConnection();
-            System.out.println("-------message-body------");
             BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
             String inputLine = null;
             resData = "";
             while ((inputLine = reader.readLine()) != null) {
@@ -72,6 +105,26 @@ public class SparkWebServer {
         return resData;
     }
 
+    /**
+     * Method that returns int, variable that helps to load balancer
+     * @return
+     */
+    public static int getLoad (){
+        return load;
+    }
+
+    /**
+     * Method that refresh variable of load balancer
+     * @param loadCont
+     */
+    public static void setLoad(int loadCont){
+        load = loadCont;
+    }
+
+    /**
+     * Method that return port of the service
+     * @return
+     */
     private static int getPort (){
         if(System.getenv("PORT") != null){
             return Integer.parseInt(System.getenv("PORT"));
