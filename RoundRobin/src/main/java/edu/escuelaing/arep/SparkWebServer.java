@@ -1,3 +1,5 @@
+package edu.escuelaing.arep;
+
 import spark.Request;
 import spark.Response;
 import java.io.BufferedReader;

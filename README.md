@@ -1,6 +1,6 @@
 # Taller de de modularización con virtualización e Introducción a Docker y a AWS
 
-
+Uso de los servicios EC2 de AWS y Docker para la creación de un servicio Web.
 
 ## Clonacion del repositorio 
 
@@ -14,14 +14,14 @@ git clone https://github.com/mariahv9/DockerAWS-AREP
 
 ```
 cd DockerAWS-AREP
+cd RoundRobin
 mvn package
+java -cp java -cp target/classes;target/dependency/* edu.escuelaing.arep.SparkWebServer
 ```
 
-### Despliegue de la App
+Abrir el siguiente para ver el servicio:
 
-Abrir el siguiente para ver el despliegue:
-
-* [HerokuApp]()
+* [Link Local](http://localhost:4567/index)
 
 ### Control versionamiento
 
