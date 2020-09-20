@@ -32,7 +32,9 @@ Abrir el siguiente para ver el servicio:
 
 * [Java 8](https://www.java.com/es/about/whatis_java.jsp)
 * [Maven](https://maven.apache.org/) - Manejador de dependencias
-* [Heroku](https://dashboard.heroku.com/) - Despliegue
+* [Docker](https://www.docker.com/) - Contenedores
+* [Docker Hub](https://hub.docker.com/) - Repositorio de contenedores
+* [AWS](https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Home:) - Creacion de servicio EC2
 * [CircleCI](https://circleci.com/) - Control de versionamiento
 
 
