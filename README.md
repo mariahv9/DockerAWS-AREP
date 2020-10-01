@@ -22,7 +22,7 @@ java -cp java -cp target/classes;target/dependency/* edu.escuelaing.arep.SparkWe
 Abrir el siguiente para ver el servicio:
 
 * [Link Local](http://localhost:4567/index)
-* [Link AWS](http://ec2-35-175-129-150.compute-1.amazonaws.com:51004/index)
+* [Link AWS](ec2-100-25-34-176.compute-1.amazonaws.com:51004/index)
 
 ### Control versionamiento
 
